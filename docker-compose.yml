@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_ESDP
+    restart: always
+    env_file:
+      - configs/postgres/.env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:${PGDATA}
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - env_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ESDP
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    networks:
+      - env_network
+
+volumes:
+  postgres_data:
+
+networks:
+  env_network:
+    driver: bridge
