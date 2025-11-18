@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS public.alerts
     sensor_id integer NOT NULL,
     "timestamp" time without time zone NOT NULL,
     type_alert "char" NOT NULL,
-    message text COLLATE pg_catalog."default"
 )
 
 TABLESPACE pg_default;
