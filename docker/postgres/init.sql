@@ -1,12 +1,15 @@
+-- Table: public.Raw_readings
 
--- this is the table for Raw_readings
+-- DROP TABLE IF EXISTS public."Raw_readings";
+
 CREATE TABLE IF NOT EXISTS public."Raw_readings"
 (
     "Sensor_id" integer NOT NULL,
-    "Timestamp" time without time zone NOT NULL,
-    "Temperature" numeric(3,1),
-    "Humidity" numeric(3,1),
-    "Co2" integer
+    "TimeStamp" timestamp(0) without time zone NOT NULL,
+    "Temperature" numeric(4,1),
+    "Humidity" numeric(4,1),
+    "Co2" integer,
+    CONSTRAINT "Raw_readings_pkey" PRIMARY KEY ("Sensor_id", "TimeStamp")
 )
 
 TABLESPACE pg_default;
@@ -15,7 +18,7 @@ ALTER TABLE IF EXISTS public."Raw_readings"
     OWNER to "Larbol624";
 
 COMMENT ON TABLE public."Raw_readings"
-    IS 'This tables only takes in the raw_readings';
+    IS 'This table saves the raw_readings from the sensor data';
 
 
 -- this the table for aggregated metrics

@@ -37,7 +37,7 @@ def get_all_raw(conn=None):
 
     
     cursor=conn.cursor()
-    cursor.execute("""SELECT * FROM public."Raw_readings" """)
+    cursor.execute("""SELECT * FROM public."Raw_readings"; """)
     data=cursor.fetchall()
 
     if own_conn:
@@ -61,7 +61,7 @@ def get_all_aggregated(conn=None):
 
     
     cursor=conn.cursor()
-    cursor.execute("""SELECT * FROM public."aggregated_metrics" """)
+    cursor.execute("""SELECT * FROM public."Aggregated_metrics" """)
     data=cursor.fetchall()
 
     if own_conn:
@@ -85,7 +85,7 @@ def get_all_alerts(conn=None):
 
     
     cursor=conn.cursor()
-    cursor.execute("""SELECT * FROM public."alerts" """)
+    cursor.execute("""SELECT * FROM public."Alerts" """)
     data=cursor.fetchall()
 
     if own_conn:
@@ -107,7 +107,7 @@ def insert_into_raw(sensor_id , Timestamp, Temperature, Humidity, Co2, conn=None
 
     cursor=conn.cursor()
 
-    query="""INSERT INTO public."Raw_readings" ("Sensor_id", "Timestamp", "Temperature", "Humidity", "Co2") VALUES (%s, %s, %s, %s, %s);"""
+    query="""INSERT INTO public."Raw_readings" ("Sensor_id", "TimeStamp", "Temperature", "Humidity", "Co2") VALUES (%s, %s, %s, %s, %s);"""
     cursor.execute(query,(sensor_id,Timestamp,Temperature,Humidity,Co2))
 
     conn.commit()
@@ -129,7 +129,7 @@ def insert_into_aggregated(sensor_id , Timestamp, avgTemperature, avgHumidity, a
 
     cursor=conn.cursor()
 
-    query="""INSERT INTO public."aggregated_metrics" ("sensor_id", "window_start", "avg_temp", "avg_humidity", "avg_co2") VALUES (%s, %s, %s, %s, %s);"""
+    query="""INSERT INTO public."Aggregated_metrics" ("Sensor_id", "Window_start", "avg_Temp", "avg_Humidity", "avg_Co2") VALUES (%s, %s, %s, %s, %s);"""
     cursor.execute(query,(sensor_id,Timestamp,avgTemperature,avgHumidity,avgCo2))
 
     conn.commit()
@@ -137,7 +137,7 @@ def insert_into_aggregated(sensor_id , Timestamp, avgTemperature, avgHumidity, a
         conn.close()
     return   
 
-def insert_into_alerts(sensor_id , Timestamp, type, conn=None):
+def insert_into_alerts(sensor_id , Timestamp, type, problem_message,conn=None):
     """
     Insert alert into the alert tabel
     Also if there is no connection given then it creates it on his own and also closes it.
@@ -151,8 +151,8 @@ def insert_into_alerts(sensor_id , Timestamp, type, conn=None):
 
     cursor=conn.cursor()
 
-    query="""INSERT INTO public."alerts" ("sensor_id", "timestamp", "type_alert" ) VALUES (%s, %s, %s);"""
-    cursor.execute(query,(sensor_id,Timestamp,type))
+    query="""INSERT INTO public."Alerts" ("Sensor_id", "TimeStamp", "error_Type", "Problem_message" ) VALUES (%s, %s, %s, %s);"""
+    cursor.execute(query,(sensor_id,Timestamp,type, problem_message))
 
     conn.commit()
     if own_conn:

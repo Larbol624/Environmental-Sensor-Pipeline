@@ -14,6 +14,7 @@ ENV/
 data/
 logs/
 *.db
+TODO.md
 
 # Configs 
 configs/*.env
