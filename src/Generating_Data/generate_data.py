@@ -2,6 +2,10 @@ import random
 import time
 import json
 from datetime import datetime
+from kafka import KafkaProducer
+
+producer = KafkaProducer(bootstrap_servers="localhost:9092")
+
 
 NUM_SENSORS = 100
 
@@ -35,7 +39,7 @@ def generate_sensor_reading(sensor_id):
 
     return {
         "sensor_id": sensor_id,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now().isoformat(),
         "temperature": round(state["temperature"], 2),
         "humidity": round(state["humidity"], 2),
         "co2": int(state["co2"])
@@ -43,11 +47,18 @@ def generate_sensor_reading(sensor_id):
 
 def live_stream():
     print("Starting realistic live sensor stream...\n")
-    while True:
+    for i in range(10):
         for sensor_id in range(1, NUM_SENSORS + 1):
             reading = generate_sensor_reading(sensor_id)
-            print(json.dumps(reading))
+            producer.send("test_topic", json.dumps(reading).encode('utf-8'))
+            producer.flush()
         time.sleep(1)
+
+def test_stream(test_producer):
+    for sensor_id in range(1, NUM_SENSORS + 1):
+            reading = generate_sensor_reading(sensor_id)
+            test_producer.send("test_topic", json.dumps(reading).encode('utf-8'))
+            test_producer.flush()
 
 if __name__ == "__main__":
     live_stream()

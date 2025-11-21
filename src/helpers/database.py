@@ -9,14 +9,15 @@ def get_connection():
     This function establishes an connection with the postgres database and returns the connection
 
     """
-    dotenv_path=os.path.join(os.path.dirname(__file__),'../configs/postgres/.env')
+    dotenv_path=os.path.join(os.path.dirname(__file__),'../../configs/postgres/.env')
     load_dotenv(dotenv_path)
+    print(os.getenv("POSTGRES_HOST"))
     conn=psycopg2.connect(
         host=os.getenv("POSTGRES_HOST"),
         database=os.getenv("POSTGRES_DB"),
         user=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
-        port=int(os.getenv("POSTGRES_PORT=5432",5432))
+        port=int(os.getenv("POSTGRES_PORT",5432))
     )
     return conn
 
