@@ -53,7 +53,14 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - ./configs/kafka:/etc/kafka-init
+    command: > 
+      bash -c " 
+        /etc/confluent/docker/run &
+        sleep 10 &&
+        bash /etc/kafka-init/create-topics.sh
+      "
     networks:
       - env_network
 

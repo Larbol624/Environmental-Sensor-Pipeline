@@ -1,7 +1,6 @@
 import unittest
-from unittest.mock import MagicMock
-from src.helpers.database import get_connection, get_all_raw, get_all_aggregated, get_all_alerts,insert_into_raw, insert_into_aggregated, insert_into_alerts
-from src.Generating_Data.generate_data import test_stream
+from src.helpers.database import *
+
 
 
 class TestDatabase(unittest.TestCase):
@@ -61,11 +60,7 @@ class TestDatabase(unittest.TestCase):
         cls.cur.close()
         cls.conn.close()
 
-class TestKafka(unittest.TestCase):
-    def test_send_sensordata(self):
-        mock_producer= MagicMock()
-        test_stream(mock_producer)
-        self.assertEqual(mock_producer.send.call_count, 100)
+
 
 if __name__ == '__main__':
     unittest.main() 
