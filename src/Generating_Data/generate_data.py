@@ -50,14 +50,14 @@ def live_stream():
     for i in range(10):
         for sensor_id in range(1, NUM_SENSORS + 1):
             reading = generate_sensor_reading(sensor_id)
-            producer.send("test_topic", json.dumps(reading).encode('utf-8'))
+            producer.send("sensor_raw", json.dumps(reading).encode('utf-8'))
             producer.flush()
         time.sleep(1)
 
 def test_stream(test_producer):
     for sensor_id in range(1, NUM_SENSORS + 1):
             reading = generate_sensor_reading(sensor_id)
-            test_producer.send("test_topic", json.dumps(reading).encode('utf-8'))
+            test_producer.send("sensor_raw",reading)
             test_producer.flush()
 
 if __name__ == "__main__":

@@ -1,8 +1,6 @@
 import unittest
 from src.helpers.database import *
 
-
-
 class TestDatabase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

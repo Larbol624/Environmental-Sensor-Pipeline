@@ -50,24 +50,48 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper_ESDP:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
     volumes:
       - ./configs/kafka:/etc/kafka-init
     command: > 
       bash -c " 
-        /etc/confluent/docker/run &
-        sleep 10 &&
-        bash /etc/kafka-init/create-topics.sh
+        echo 'Waiting for Zookeeper...'
+        until nc -z zookeeper_ESDP 2181; do
+          sleep 2
+        done
+        echo 'Zookeeper ready, starting Kafka...'
+        /etc/confluent/docker/run & 
+        sleep 10
+        echo 'Creating topics...'
+        bash /etc/kafka-init/create_topics.sh
+        wait
       "
     networks:
       - env_network
 
+  jupyter:
+    image: jupyter/pyspark-notebook
+    container_name: pyspark_ESDP
+    ports:
+      - "8888:8888"  
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./src/spark_consumers:/home/jovyan/scripts
+    environment:
+      - PYSPARK_PYTHON=python3
+      - PYSPARK_DRIVER_PYTHON=jupyter
+      - PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip=0.0.0.0 --allow-root"
+    networks:
+      - env_network
 
 volumes:
   postgres_data:
   kafka_data:
+  zookeeper_data:
+  zookeeper_log:
 
 networks:
   env_network:
