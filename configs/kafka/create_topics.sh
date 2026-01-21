@@ -27,3 +27,10 @@ echo"[INFO] CREATE_TOPICS is doing something"
   --partitions 3 \
   --replication-factor 1 \
   --if-not-exists
+
+/usr/bin/kafka-topics --create \
+  --topic sensor_dlq \
+  --bootstrap-server localhost:9092 \
+  --partitions 3 \
+  --replication-factor 1 \
+  --if-not-exists
