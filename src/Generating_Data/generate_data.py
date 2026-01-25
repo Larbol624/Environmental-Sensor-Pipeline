@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from kafka import KafkaProducer
 
-producer = KafkaProducer(bootstrap_servers="localhost:9092")
+producer = KafkaProducer(bootstrap_servers="127.0.0.1:29092")
 
 
 NUM_SENSORS = 100

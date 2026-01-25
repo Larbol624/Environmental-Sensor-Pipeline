@@ -14,7 +14,7 @@ class TestKafka(unittest.TestCase):
         producer=create_producer()
         consumer = KafkaConsumer(
         "sensor_raw",
-        bootstrap_servers="localhost:9092",
+        bootstrap_servers="127.0.0.1:29092",
         auto_offset_reset="earliest",
         value_deserializer=lambda v: json.loads(v.decode("utf-8")),
         consumer_timeout_ms=5000
@@ -47,7 +47,7 @@ class TestKafka(unittest.TestCase):
     def test_producer(self):
         consumer=KafkaConsumer(
             "sensor_raw",
-            bootstrap_servers="localhost:9092",
+            bootstrap_servers="127.0.0.1:29092",
             auto_offset_reset="earliest",
             value_deserializer=lambda v: json.loads(v.decode("utf-8")),
             consumer_timeout_ms=5000
