@@ -46,12 +46,17 @@ services:
     container_name: kafka_ESDP
     restart: always
     ports:
-      - "9092:9092"
+      - "127.0.0.1:29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper_ESDP:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://127.0.0.1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
     volumes:
@@ -73,19 +78,19 @@ services:
       - env_network
 
   jupyter:
-    image: jupyter/pyspark-notebook
+    build: .
     container_name: pyspark_ESDP
     ports:
       - "8888:8888"  
     volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./src/spark_consumers:/home/jovyan/scripts
-    environment:
-      - PYSPARK_PYTHON=python3
-      - PYSPARK_DRIVER_PYTHON=jupyter
-      - PYSPARK_DRIVER_PYTHON_OPTS="notebook --ip=0.0.0.0 --allow-root"
+      - ./notebooks:/workspace
     networks:
       - env_network
+    depends_on:
+      - kafka
+      - postgres
+
+
 
 volumes:
   postgres_data:
