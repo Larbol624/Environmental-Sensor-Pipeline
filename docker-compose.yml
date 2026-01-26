@@ -84,6 +84,7 @@ services:
       - "8888:8888"  
     volumes:
       - ./notebooks:/workspace
+      - ./checkpoints:/checkpoints
     networks:
       - env_network
     depends_on:
