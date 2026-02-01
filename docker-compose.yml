@@ -15,7 +15,7 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:${PGDATA}
-      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./configs/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - env_network
 
@@ -78,7 +78,9 @@ services:
       - env_network
 
   jupyter:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.notebook
     container_name: pyspark_ESDP
     ports:
       - "8888:8888"  

@@ -2,6 +2,11 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, to_timestamp, current_timestamp, last, lag, abs, lit, when
 from pyspark.sql.types import  IntegerType, DoubleType
 from pyspark.sql.window import Window
+import os
+
+os.environ["PYSPARK_PYTHON"] = "python"
+os.environ["PYSPARK_DRIVER_PYTHON"] = "python"
+
 
 spark = SparkSession.builder \
     .appName("test") \
