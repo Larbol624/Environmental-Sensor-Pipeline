@@ -1,0 +1,11 @@
+services:
+  spark-tests:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.test-spark
+    volumes:
+      - ./tests/test_spark:/app/tests
+      - ./src/spark_consumers:/app/src/spark_consumers
+    working_dir: /app
+    environment:
+    - PYTHONPATH=/app

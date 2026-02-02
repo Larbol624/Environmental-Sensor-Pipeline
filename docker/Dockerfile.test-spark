@@ -1,0 +1,15 @@
+FROM apache/spark:python3
+
+WORKDIR /app
+
+USER root
+
+COPY src ./src/spark_consumers
+
+COPY tests ./tests/test_spark
+
+RUN pip install --no-cache-dir pytest pyspark
+
+ENV PYTHONPATH=/app
+
+CMD ["pytest", "-v"]

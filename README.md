@@ -13,5 +13,5 @@ docker compose --env-file configs/postgres/.env up -d
 
 Run Tests
 """
-python -m unittest discover -s tests
+python -m unittest discover -s tests/unittest
 """
