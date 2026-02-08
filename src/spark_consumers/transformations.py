@@ -1,27 +1,24 @@
-from pyspark.sql.functions import col, from_json, try_to_timestamp, to_json, when, coalesce, expr
-from pyspark.sql.types import StructType, StructField, IntegerType, DoubleType, StringType, TimestampType
+from pyspark.sql.functions import col, when, coalesce, expr, lit
 
-def clean_sensor_data(df,batch_id,output):
+def clean_sensor_data(df):
     
-    sensor_schema = StructType([
-        StructField("sensor_id", IntegerType()),
-        StructField("timestamp", StringType()),
-        StructField("temperature", DoubleType()),
-        StructField("humidity", DoubleType()),
-        StructField("co2", DoubleType())
-    ])
-        
+    EXPECTED_COLUMNS = ["sensor_id", "timestamp", "temperature", "humidity", "co2"]
+
+    for column in EXPECTED_COLUMNS:
+        if column not in df.columns:
+            df=df.withColumn(column,lit(None))
+    
     schemad_df=(
             df
-            .withColumn("sensor_id",col("sensor_id").cast(IntegerType()))
+            .withColumn("sensor_id", expr("try_cast(sensor_id as int)"))
             .withColumn("timestamp",
                 coalesce(
                 expr("try_to_timestamp(timestamp, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSS')"),
                 expr("try_to_timestamp(timestamp, 'yyyy-MM-dd''T''HH:mm:ss')")
             ))
-            .withColumn("temperature",col("temperature").cast(DoubleType()))
-            .withColumn("humidity",col("humidity").cast(DoubleType()))
-            .withColumn("co2",col("co2").cast(DoubleType()))
+            .withColumn("temperature", expr("try_cast(temperature as double)"))
+            .withColumn("humidity",expr("try_cast(humidity as double)"))
+            .withColumn("co2",expr("try_cast(co2 as int)"))
         )
 
     df_with_reason=schemad_df.withColumn(
@@ -36,11 +33,10 @@ def clean_sensor_data(df,batch_id,output):
     valid_df = df_with_reason.filter(col("dlq_reason").isNull())
     dlq_df   = df_with_reason.filter(col("dlq_reason").isNotNull())
 
-
+    return dlq_df, valid_df
     
 
-    output["valid"].append(valid_df.count())
-    output["invalid"].append(dlq_df.count())
+    
 
 
         
