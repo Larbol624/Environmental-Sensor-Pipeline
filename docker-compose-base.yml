@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15
@@ -7,14 +5,10 @@ services:
     restart: always
     env_file:
       - configs/postgres/.env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - postgres_data:${PGDATA}
+      - postgres_data:/var/lib/postgresql/data
       - ./configs/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - env_network
@@ -76,24 +70,6 @@ services:
       "
     networks:
       - env_network
-
-  jupyter:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.notebook
-    container_name: pyspark_ESDP
-    ports:
-      - "8888:8888"  
-    volumes:
-      - ./notebooks:/workspace
-      - ./checkpoints:/checkpoints
-    networks:
-      - env_network
-    depends_on:
-      - kafka
-      - postgres
-
-
 
 volumes:
   postgres_data:
