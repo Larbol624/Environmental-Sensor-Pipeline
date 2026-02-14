@@ -70,6 +70,7 @@ services:
       "
     networks:
       - env_network
+      
 
 volumes:
   postgres_data:
@@ -79,4 +80,4 @@ volumes:
 
 networks:
   env_network:
-    driver: bridge
+    external: true

@@ -1,0 +1,12 @@
+services:
+ spark-job:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.kafka-spark
+    networks:
+      - env_network
+
+
+networks:
+  env_network:
+    external: true
