@@ -40,9 +40,6 @@ df = (
 )
 
 
-
-
-
 EXPECTED_COLUMNS = ["sensor_id", "timestamp", "temperature", "humidity", "co2"]
 
 for column in EXPECTED_COLUMNS:
