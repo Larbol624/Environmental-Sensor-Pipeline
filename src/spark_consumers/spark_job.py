@@ -73,13 +73,24 @@ dlq_df   = df_with_reason.filter(col("dlq_reason").isNotNull())
 
 valid_df=valid_df.selectExpr("to_json(struct(*)) AS value")
 
+dlq_df=dlq_df.selectExpr("to_json(struct(*)) AS value")
+
 query = (
     valid_df.writeStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "kafka_ESDP:9092")
     .option("topic", "sensor_cleaned")
-    .option("checkpointLocation", "/tmp/checkpoints")
+    .option("checkpointLocation", "/tmp/checkpoints_valid")
     .start()
 )
 
-query.awaitTermination()
+dlq_query= (
+    dlq_df.writeStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "kafka_ESDP:9092")
+    .option("topic", "sensor_dlq")
+    .option("checkpointLocation", "/tmp/checkpoints_dlq")
+    .start()
+)
+
+spark.streams.awaitAnyTermination()
