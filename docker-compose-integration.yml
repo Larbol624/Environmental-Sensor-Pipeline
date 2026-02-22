@@ -1,0 +1,51 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper_Integration
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - env_network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka_Integration
+    restart: always
+    ports:
+      - "127.0.0.1:29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_Integration:2181
+
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://127.0.0.1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+    networks:
+      - env_network
+    depends_on:
+      - zookeeper
+
+  integrationtest:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.integration-test
+    networks:
+      - env_network
+    depends_on:
+      - kafka
+    volumes:
+      - ./src/spark_consumers/first_transform.py:/app/first_transform.py
+      - ./src/helpers/kafka.py:/app/src/helpers/kafka.py
+      - ./tests/integration_tests/test_integration.py:/app/test_integration.py
+      - ./tests/integration_tests/helpers.py:/app/helpers.py
+    
+networks:
+  env_network:
+    external: true
+    

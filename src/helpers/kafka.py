@@ -1,11 +1,12 @@
-from kafka import KafkaProducer, KafkaConsumer
+from kafka import KafkaProducer, KafkaConsumer, KafkaAdminClient
+from kafka.admin import NewTopic
 import json
 import uuid
 import time
 
-def create_producer():
+def create_producer(bootstrap_server="127.0.0.1:29092"):
     return KafkaProducer(
-        bootstrap_servers="127.0.0.1:29092",
+        bootstrap_servers=bootstrap_server,
         value_serializer=lambda v: json.dumps(v).encode("utf-8")
     )
 
@@ -15,13 +16,13 @@ def send_sensor_data(topic,data,producer=None):
     return producer.send(topic,data)
 
 
-def create_consumer(topic):
+def create_consumer(topic,bootstrap_server="127.0.0.1:29092"):
     return KafkaConsumer(
         topic,
         group_id = f"test-{uuid.uuid4()}",
         auto_offset_reset="earliest",
         enable_auto_commit = False,
-        bootstrap_servers="127.0.0.1:29092",
+        bootstrap_servers=bootstrap_server,
         value_deserializer=lambda v:json.loads(v.decode("utf-8"))
     )
 
@@ -41,3 +42,19 @@ def return_message(result):
             if msg.value: 
                 response.append(msg.value)
     return response
+
+
+def create_test_topic(bootstrap_server="127.0.0.1:29092"):
+    admin=KafkaAdminClient(bootstrap_servers=bootstrap_server)
+    topic_name=f"test_topic_{uuid.uuid4().hex[:6]}"
+    topic=NewTopic(name=topic_name,num_partitions=1,replication_factor=1)
+    admin.create_topics([topic])
+    admin.close()
+    return topic_name
+
+
+def delete_test_topic(topics,bootstrap_server="127.0.0.1:29092"):
+    admin=KafkaAdminClient(bootstrap_servers=bootstrap_server)
+    admin.delete_topics(topics)
+    admin.close()
+    
