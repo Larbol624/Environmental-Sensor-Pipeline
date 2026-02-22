@@ -2,20 +2,7 @@ from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, IntegerType,DoubleType
 from pyspark.sql.functions import col, when, coalesce, expr, lit
 
-def first_transform(raw):
-    schema = StructType() \
-    .add("sensor_id", StringType()) \
-    .add("timestamp", StringType())\
-    .add("temperature", StringType())\
-    .add("humidity",StringType())\
-    .add("co2",StringType())
-
-    df = (
-    raw
-    .withColumn("data",from_json(col("json"), schema))
-    .select("data.*", "kafka_timestamp")
-)
-
+def first_transform(df):
 
     EXPECTED_COLUMNS = ["sensor_id", "timestamp", "temperature", "humidity", "co2"]
 
@@ -48,8 +35,5 @@ def first_transform(raw):
     valid_df = df_with_reason.filter(col("dlq_reason").isNull())
     dlq_df   = df_with_reason.filter(col("dlq_reason").isNotNull())
 
-    valid_df=valid_df.selectExpr("to_json(struct(*)) AS value")
-
-    dlq_df=dlq_df.selectExpr("to_json(struct(*)) AS value")
 
     return dlq_df,valid_df

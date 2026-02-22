@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession
-from first_transform import first_transform
+from src.spark_consumers.first_transform import first_transform
 import uuid
+from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StringType, IntegerType,DoubleType
 
 def read_writestream(spark,input_topic,output_topic,dlq_topic):
     raw=(spark.readStream
@@ -14,7 +16,23 @@ def read_writestream(spark,input_topic,output_topic,dlq_topic):
     "timestamp as kafka_timestamp"
     )
 )
-    dlq_df,cleaned_df=first_transform(raw)
+    schema = StructType() \
+    .add("sensor_id", StringType()) \
+    .add("timestamp", StringType())\
+    .add("temperature", StringType())\
+    .add("humidity",StringType())\
+    .add("co2",StringType())
+
+    df = (
+    raw
+    .withColumn("data",from_json(col("json"), schema))
+    .select("data.*", "kafka_timestamp")
+)
+    dlq_df,cleaned_df=first_transform(df)
+
+    cleaned_df=cleaned_df.selectExpr("to_json(struct(*)) AS value")
+    dlq_df=dlq_df.selectExpr("to_json(struct(*)) AS value")
+
 
     query_clean=(cleaned_df.writeStream
             .format("kafka")

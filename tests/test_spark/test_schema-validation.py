@@ -1,4 +1,4 @@
-from src.spark_consumers.transformations import clean_sensor_data 
+from src.spark_consumers.first_transform import first_transform 
 from pyspark.sql.types import (
     StructType, StructField,
     IntegerType, DoubleType, TimestampType, StringType
@@ -15,10 +15,11 @@ def test_schema(spark):
     }
 
     valid_df=spark.createDataFrame([valid_schema])
-    dlq,valid=clean_sensor_data(valid_df)
+    dlq,valid=first_transform(valid_df)
 
     
     assert valid.columns == ["co2","humidity","sensor_id","temperature","timestamp","dlq_reason"]
+    
 
     invalid_schema={
         "sensor_d": 1,
@@ -29,7 +30,7 @@ def test_schema(spark):
     }
 
     invalid_df=spark.createDataFrame([invalid_schema])
-    dlq,valid=clean_sensor_data(invalid_df)
+    dlq,valid=first_transform(invalid_df)
 
     assert not dlq.rdd.isEmpty()
     assert valid.rdd.isEmpty()
@@ -45,7 +46,7 @@ def test_schema(spark):
         ["aslfjasf","lasdjsald","sladhaksjfh","askdhasf"]
     )
 
-    dlq,valid=clean_sensor_data(invalid_df2)
+    dlq,valid=first_transform(invalid_df2)
 
     assert not dlq.rdd.isEmpty()
     assert valid.rdd.isEmpty()
@@ -82,7 +83,7 @@ def test_schema(spark):
         }
     ])
 
-    dlq,valid=clean_sensor_data(missing_values_df)
+    dlq,valid=first_transform(missing_values_df)
 
     assert dlq.count() == 3
     assert valid.count() == 1
@@ -126,7 +127,7 @@ def test_schema(spark):
         }
     ])
 
-    dlq,valid=clean_sensor_data(wrong_types_df)
+    dlq,valid=first_transform(wrong_types_df)
 
     assert dlq.count() == 4
 
@@ -157,7 +158,7 @@ def test_schema(spark):
         }
     ])
 
-    dlq,valid=clean_sensor_data(ranges_df)
+    dlq,valid=first_transform(ranges_df)
 
     assert dlq.count()      == 2
     assert valid.count()    == 1

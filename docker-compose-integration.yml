@@ -40,7 +40,7 @@ services:
     depends_on:
       - kafka
     volumes:
-      - ./src/spark_consumers/first_transform.py:/app/first_transform.py
+      - ./src/spark_consumers/:/app/src/spark_consumers
       - ./src/helpers/kafka.py:/app/src/helpers/kafka.py
       - ./tests/integration_tests/test_integration.py:/app/test_integration.py
       - ./tests/integration_tests/helpers.py:/app/helpers.py
