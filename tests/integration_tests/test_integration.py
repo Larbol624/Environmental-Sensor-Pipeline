@@ -16,9 +16,6 @@ class TestIntegration(unittest.TestCase):
                 "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1") \
         .getOrCreate()
 
-       
- 
-        
     def test_first_job(self):
         topic_raw=create_test_topic("kafka:9092")
         consumer_raw=create_consumer(topic_raw, "kafka:9092")
