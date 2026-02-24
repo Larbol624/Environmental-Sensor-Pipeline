@@ -32,6 +32,54 @@ def test_alert(spark):
     rows=df_alert.collect()
     
     assert len(rows) == 1
-    assert rows[0]["alert_reasons"] == ["temperature too high"]
+    assert rows[0]["alert_reason"] == "temperature too high"
     
 
+    multiple_alerts=spark.createDataFrame([{
+        "sensor_id":1,
+        "temperature":300.0,
+        "humidity":50.0,
+        "co2":200
+    },
+    {
+        "sensor_id":1,
+        "temperature":20.0,
+        "humidity":80.0,
+        "co2":200
+    },
+    {
+        "sensor_id":1,
+        "temperature":20.0,
+        "humidity":50.0,
+        "co2":3000
+    },
+    {
+        "sensor_id":1,
+        "temperature":20.0,
+        "humidity":50.0,
+        "co2":200
+    }],schema)
+
+    df_multiple_alerts=alert_check(multiple_alerts)
+
+    rows=df_multiple_alerts.collect()
+
+    assert len(rows)==3
+
+    assert rows[0]["alert_reason"] == "temperature too high"
+    assert rows[1]["alert_reason"] == "humidity too high"
+    assert rows[2]["alert_reason"] == "co2 level too high"
+
+
+    multiple_alerts_2=spark.createDataFrame([{
+        "sensor_id":1,
+        "temperature":200.0,
+        "humidity":80.0,
+        "co2":3200
+    }],schema)
+
+    df_multiple_alerts_2=alert_check(multiple_alerts_2)
+
+    rows=df_multiple_alerts_2.collect()
+
+    assert len(rows)==3

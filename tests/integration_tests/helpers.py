@@ -1,10 +1,9 @@
 from pyspark.sql import SparkSession
-from src.spark_consumers.first_transform import first_transform
 import uuid
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, IntegerType,DoubleType
 
-def read_writestream(spark,input_topic,output_topic,dlq_topic):
+def read_writestream(spark,input_topic,output_topic,dlq_topic,tranforms_function):
     raw=(spark.readStream
         .format("kafka")
         .option("kafka.bootstrap.servers", "kafka_Integration:9092")
@@ -28,7 +27,7 @@ def read_writestream(spark,input_topic,output_topic,dlq_topic):
     .withColumn("data",from_json(col("json"), schema))
     .select("data.*", "kafka_timestamp")
 )
-    dlq_df,cleaned_df=first_transform(df)
+    dlq_df,cleaned_df=tranforms_function(df)
 
     cleaned_df=cleaned_df.selectExpr("to_json(struct(*)) AS value")
     dlq_df=dlq_df.selectExpr("to_json(struct(*)) AS value")

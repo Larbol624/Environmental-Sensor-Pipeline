@@ -1,6 +1,7 @@
-from pyspark.sql.functions import col, when,array,array_remove, size, lit,expr
+from pyspark.sql.functions import col, when,array, size, lit,expr, explode
 
 def alert_check(df):
+    
     df_alert_reason=df.withColumn(
         "alert_reasons",
         array(
@@ -19,4 +20,8 @@ def alert_check(df):
     
     df_alerts=df_alert_reason.filter(size(col("alert_reasons")) > 0)
 
-    return df_alerts
+    df_exploded=df_alerts.withColumn("alert_reason", explode(col("alert_reasons")))
+
+    df_exploded=df_exploded.drop("alert_reasons")
+
+    return df_exploded

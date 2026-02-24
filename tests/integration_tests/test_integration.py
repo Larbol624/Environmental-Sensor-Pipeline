@@ -1,5 +1,6 @@
 import unittest
 from src.helpers.kafka import *
+from src.spark_consumers.first_transform import first_transform
 from pyspark.sql import SparkSession
 from helpers import read_writestream
 
@@ -83,7 +84,7 @@ class TestIntegration(unittest.TestCase):
         wait_for_assignment(consumer_clean)
         wait_for_assignment(consumer_dlq)
 
-        read_writestream(self.spark,topic_raw,topic_clean,topic_dlq)
+        read_writestream(self.spark,topic_raw,topic_clean,topic_dlq, first_transform)
 
         response_clean=consumer_clean.poll(500)
         msg_clean=return_message(response_clean)
