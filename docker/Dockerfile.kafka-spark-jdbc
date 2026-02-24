@@ -1,0 +1,32 @@
+FROM eclipse-temurin:17-jdk
+
+
+ENV SPARK_VERSION=3.5.1
+ENV HADOOP_VERSION=3
+ENV SCALA_VERSION=2.12
+ENV SPARK_HOME=/opt/spark
+ENV PATH="${SPARK_HOME}/bin:${PATH}"
+ARG POSTGRES_DRIVER_VERSION=42.7.3
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    python3 \
+    python3-pip \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN curl -L https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+    | tar -xz -C /opt && \
+    mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} ${SPARK_HOME}
+
+RUN curl -L -o ${SPARK_HOME}/jars/postgresql-${POSTGRES_DRIVER_VERSION}.jar \
+    https://jdbc.postgresql.org/download/postgresql-${POSTGRES_DRIVER_VERSION}.jar
+
+ENV PATH="${SPARK_HOME}/bin:${PATH}"
+
+RUN python3 -m pip install --break-system-packages pyspark==3.5.1
+
+WORKDIR /app
+
+COPY src/ src/

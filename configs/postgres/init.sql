@@ -25,21 +25,23 @@ COMMENT ON TABLE public."Raw_readings"
 
 -- DROP TABLE IF EXISTS public."Alerts";
 
-CREATE TABLE IF NOT EXISTS public."Alerts"
+CREATE TABLE IF NOT EXISTS public.alerts
 (
-    "Sensor_id" integer NOT NULL,
-    "TimeStamp" timestamp(0) without time zone NOT NULL,
-    "error_Type" "char" NOT NULL,
-    "Problem_message" text COLLATE pg_catalog."default",
-    CONSTRAINT "Alerts_pkey" PRIMARY KEY ("Sensor_id", "TimeStamp", "error_Type")
+    sensor_id integer,
+    "timestamp" timestamp without time zone,
+    temperature double precision,
+    humidity double precision,
+    co2 integer,
+    kafka_timestamp timestamp without time zone,
+    alert_reason character varying(32) COLLATE pg_catalog."default"
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Alerts"
+ALTER TABLE IF EXISTS public.alerts
     OWNER to "Larbol624";
 
-COMMENT ON TABLE public."Alerts"
+COMMENT ON TABLE public.alerts
     IS 'This table contains all information about an alert if the temperature, Co2 level or Humidity is at
 a critical level.
 ';

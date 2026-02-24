@@ -41,12 +41,12 @@ df = (
 
 alert_df=alert_check(df)
 
-alert_df=alert_df.selectExpr("to_json(struct(*)) AS value")
+alert_df_json=alert_df.selectExpr("to_json(struct(*)) AS value")
 
 
 
 query = (
-    alert_df.writeStream
+    alert_df_json.writeStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "kafka_ESDP:9092")
     .option("topic", "sensor_alerts")
@@ -54,6 +54,24 @@ query = (
     .start()
 )
 
+def write_to_postgres(batch_df, batch_id):
+    (
+        batch_df.write
+        .format("jdbc")
+        .option("url", "jdbc:postgresql://postgres:5432/ESDP_db")
+        .option("dbtable", "alerts")
+        .option("user", "Larbol624")   ## NEED TO USE .env FILE
+        .option("password", "Test123")
+        .mode("append")
+        .save()
+    )
 
+query_db = (
+    alert_df
+    .writeStream
+    .foreachBatch(write_to_postgres)
+    .option("checkpointLocation", "/tmp/postgres_alerts")
+    .start()
+)
 
 spark.streams.awaitAnyTermination()

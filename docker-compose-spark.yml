@@ -11,7 +11,7 @@ services:
   spark-job-alerts:
     build: 
       context: .
-      dockerfile: ./docker/dockerfile.kafka-spark
+      dockerfile: ./docker/dockerfile.kafka-spark-jdbc
     networks:
       - env_network
     command:

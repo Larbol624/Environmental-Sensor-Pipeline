@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.dashboard
+    ports:
+    - "8501:8501"
+    networks:
+      - env_network
+    command:
+      bash -c "streamlit run dashboard.py --server.port=8501 --server.adres=0.0.0.0"
+  
+networks:
+  env_network:
+    external: true
