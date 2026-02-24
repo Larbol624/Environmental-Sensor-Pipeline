@@ -5,7 +5,7 @@ from first_transform import first_transform
 
 spark = (
     SparkSession.builder \
-    .appName("KafkaSparkStreaming") \
+    .appName("KafkaSparkStreaming_first_clean") \
     .config("spark.driver.memory", "1g") \
     .config("spark.executor.memory", "1g") \
     .getOrCreate()
@@ -19,6 +19,7 @@ schema = StructType() \
     .add("temperature", StringType())\
     .add("humidity",StringType())\
     .add("co2",StringType())
+    
 
 raw = (
     spark.readStream

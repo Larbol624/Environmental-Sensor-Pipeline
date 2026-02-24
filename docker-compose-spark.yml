@@ -1,11 +1,21 @@
 services:
- spark-job:
+  spark-job-first-clean:
     build: 
       context: .
       dockerfile: ./docker/dockerfile.kafka-spark
     networks:
       - env_network
+    command:
+      bash -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/spark_job_first_clean.py"
 
+  spark-job-alerts:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.kafka-spark
+    networks:
+      - env_network
+    command:
+      bash -c "spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/spark_job_alert.py"
 
 networks:
   env_network:

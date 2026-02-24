@@ -26,5 +26,3 @@ RUN python3 -m pip install --break-system-packages pyspark==3.5.1
 WORKDIR /app
 
 COPY src/ src/
-
-CMD ["spark-submit","--packages","org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1","src/spark_consumers/spark_job.py"]
