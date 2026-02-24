@@ -7,7 +7,7 @@ def alert_check(df):
         array(
             when(col("temperature").cast("double") > 26, lit("temperature too high")),
             when(col("temperature").cast("double") < 17, lit("temperature too low")),
-            when(col("co2").cast("double") > 1500, lit("co2 level too high")),
+            when(col("co2").cast("int") > 1500, lit("co2 level too high")),
             when(col("humidity").cast("double") < 40, lit("humidity too low")),
             when(col("humidity").cast("double") > 60, lit("humidity too high"))
         )

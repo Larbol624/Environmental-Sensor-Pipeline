@@ -1,6 +1,7 @@
 import unittest
 from src.helpers.kafka import *
 from src.spark_consumers.first_transform import first_transform
+from src.spark_consumers.alerts import alert_check
 from pyspark.sql import SparkSession
 from helpers import read_writestream
 
@@ -84,7 +85,7 @@ class TestIntegration(unittest.TestCase):
         wait_for_assignment(consumer_clean)
         wait_for_assignment(consumer_dlq)
 
-        read_writestream(self.spark,topic_raw,topic_clean,topic_dlq, first_transform)
+        read_writestream(self.spark,topic_raw,topic_clean,first_transform,topic_dlq)
 
         response_clean=consumer_clean.poll(500)
         msg_clean=return_message(response_clean)
@@ -102,6 +103,39 @@ class TestIntegration(unittest.TestCase):
         consumer_clean.close()
         consumer_dlq.close()
 
+        topic_clean=create_test_topic("kafka:9092")
+        topic_alert=create_test_topic("kafka:9092")
+  
+        self.delete_topics.append(topic_clean)
+        self.delete_topics.append(topic_alert)
+        
+        consumer_alert=create_consumer(topic_alert,bootstrap_server="kafka:9092")
+        
+
+        wait_for_assignment(consumer_alert)
+
+        self.producer.send(topic_clean,{
+            "sensor_id": 1,
+            "timestamp": '2026-01-30T21:00:00',
+            "temperature": 31.0,
+            "humidity": 90.0,
+            "co2":3500
+            })
+
+        self.producer.flush()
+
+        read_writestream(self.spark,topic_clean, topic_alert,alert_check)
+
+        response_alert=consumer_alert.poll(500)
+        msg_alert=return_message(response_alert)
+        consumer_alert.close()
+        
+        
+        self.assertEqual(len(msg_alert),3)
+
+        self.assertEqual(msg_alert[0]["alert_reason"],"temperature too high")
+
+        
 
     @classmethod
     def tearDown(cls):
