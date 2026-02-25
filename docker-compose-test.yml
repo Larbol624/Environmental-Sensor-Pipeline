@@ -9,3 +9,6 @@ services:
     working_dir: /app
     environment:
     - PYTHONPATH=/app
+    command:
+      bash -c "pytest tests/test_alerts.py -vv"
+    

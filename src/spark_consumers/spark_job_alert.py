@@ -67,8 +67,7 @@ def write_to_postgres(batch_df, batch_id):
     )
 
 query_db = (
-    alert_df
-    .writeStream
+    alert_df.writeStream
     .foreachBatch(write_to_postgres)
     .option("checkpointLocation", "/tmp/postgres_alerts")
     .start()
