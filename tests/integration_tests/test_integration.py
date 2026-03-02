@@ -1,9 +1,10 @@
 import unittest
 from src.helpers.kafka import *
 from src.spark_consumers.first_transform import first_transform
+from src.spark_consumers.second_transform import second_transform
 from src.spark_consumers.alerts import alert_check
 from pyspark.sql import SparkSession
-from helpers import read_writestream
+from helpers import read_writestream, read_write_batch
 
 class TestIntegration(unittest.TestCase):
 
@@ -135,7 +136,41 @@ class TestIntegration(unittest.TestCase):
 
         self.assertEqual(msg_alert[0]["alert_reason"],"temperature too high")
 
-        
+        topic_clean=create_test_topic("kafka:9092")
+        topic_clean_2=create_test_topic("kafka:9092")
+
+        self.delete_topics.append(topic_clean)
+        self.delete_topics.append(topic_clean_2)
+
+        consumer_curated=create_consumer(topic_clean_2,bootstrap_server="kafka:9092")
+        wait_for_assignment(consumer_curated)
+
+        self.producer.send(topic_clean,{
+            "sensor_id": 1,
+            "timestamp": '2026-01-30T21:00:00',
+            "temperature": 31.0,
+            "humidity": 90.0,
+            "co2":3500
+        })
+
+        self.producer.send(topic_clean,{
+            "sensor_id": 1,
+            "timestamp": '2026-01-30T21:00:01',
+            "temperature": 35.0,
+            "humidity": 60.0,
+            "co2":2500
+        })
+
+        read_write_batch(self.spark,topic_clean, topic_clean_2, second_transform)
+
+        response_curated=consumer_curated.poll(500)
+        msg_curated=return_message(response_curated)
+        consumer_curated.close()
+
+        self.assertEqual(len(msg_curated),2)
+        self.assertEqual(msg_curated[1]["anomaly"],True)
+
+
 
     @classmethod
     def tearDown(cls):
