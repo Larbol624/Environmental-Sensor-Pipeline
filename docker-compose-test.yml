@@ -10,5 +10,5 @@ services:
     environment:
     - PYTHONPATH=/app
     command:
-      bash -c "pytest tests/test_alerts.py -vv"
+      bash -c "pytest tests/test_second_clean.py -vv"
     

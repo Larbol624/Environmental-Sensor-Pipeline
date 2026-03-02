@@ -1,5 +1,5 @@
 from pyspark.sql.window import Window
-from pyspark.sql.functions import col, current_timestamp, last, lag, abs
+from pyspark.sql.functions import col, current_timestamp, last, lag, abs, round
 
 
 def second_transform(df):
@@ -27,9 +27,9 @@ def second_transform(df):
     )
     
     df_deltas = df_deduped \
-        .withColumn("temp_delta", abs(col("temperature") - lag("temperature").over(window_spec_anomaly))) \
-        .withColumn("humid_delta", abs(col("humidity") - lag("humidity").over(window_spec_anomaly))) \
-        .withColumn("co2_delta", abs(col("co2") - lag("co2").over(window_spec_anomaly)))
+        .withColumn("temp_delta", round(abs(col("temperature") - lag("temperature").over(window_spec_anomaly)),2)) \
+        .withColumn("humid_delta", round(abs(col("humidity") - lag("humidity").over(window_spec_anomaly)),2)) \
+        .withColumn("co2_delta", round(abs(col("co2") - lag("co2").over(window_spec_anomaly)),2))
 
     df_anomaly = df_deltas \
             .withColumn("temp_anomaly", col("temp_delta") > 3) \
