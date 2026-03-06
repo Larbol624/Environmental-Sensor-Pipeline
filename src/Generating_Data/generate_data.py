@@ -39,7 +39,7 @@ def generate_sensor_reading(sensor_id):
 
     return {
         "sensor_id": sensor_id,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": str(datetime.now().isoformat()),
         "temperature": round(state["temperature"], 2),
         "humidity": round(state["humidity"], 2),
         "co2": int(state["co2"])

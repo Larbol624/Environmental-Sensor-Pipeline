@@ -57,6 +57,7 @@ class TestIntegration(unittest.TestCase):
         self.delete_topics.append(topic_clean)
         self.delete_topics.append(topic_dlq)
 
+    
 
         consumer_clean=create_consumer(topic_clean,bootstrap_server="kafka:9092")
         consumer_dlq=create_consumer(topic_dlq,bootstrap_server="kafka:9092")
@@ -64,11 +65,11 @@ class TestIntegration(unittest.TestCase):
 
         self.producer.send(topic_raw,
             {
-            "sensor_id": 1,
-            "timestamp": '2026-01-30T21:00:00',
-            "temperature": 21.0,
-            "humidity": 50.0,
-            "co2":500
+            "sensor_id": 88, 
+            "timestamp": "2026-03-06T18:32:17.692773", 
+            "temperature": 18.58, 
+            "humidity": 50.52, 
+            "co2": 481
             }
         )
 
@@ -95,7 +96,7 @@ class TestIntegration(unittest.TestCase):
         msg_dlq=return_message(response_dlq)
 
         self.assertTrue(len(msg_clean)==1)
-        self.assertEqual(msg_clean[0]["timestamp"],'2026-01-30T21:00:00.000Z')
+        self.assertEqual(msg_clean[0]["timestamp"],"2026-03-06T18:32:17.692Z")
         self.assertTrue(msg_clean[0]["kafka_timestamp"])
 
         self.assertTrue(len(msg_dlq)==1)
@@ -103,6 +104,8 @@ class TestIntegration(unittest.TestCase):
 
         consumer_clean.close()
         consumer_dlq.close()
+
+    
 
         topic_clean=create_test_topic("kafka:9092")
         topic_alert=create_test_topic("kafka:9092")
@@ -135,6 +138,8 @@ class TestIntegration(unittest.TestCase):
         self.assertEqual(len(msg_alert),3)
 
         self.assertEqual(msg_alert[0]["alert_reason"],"temperature too high")
+
+    
 
         topic_clean=create_test_topic("kafka:9092")
         topic_clean_2=create_test_topic("kafka:9092")

@@ -1,6 +1,6 @@
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, IntegerType,DoubleType
-from pyspark.sql.functions import col, when, coalesce, expr, lit
+from pyspark.sql.functions import col, when, coalesce, expr, lit, to_timestamp
 
 def first_transform(df):
 
@@ -15,8 +15,8 @@ def first_transform(df):
             .withColumn("sensor_id", expr("try_cast(sensor_id as int)"))
             .withColumn("timestamp",
                 coalesce(
-                expr("try_to_timestamp(timestamp, \"yyyy-MM-dd'T'HH:mm:ss\")"),
-                expr("try_to_timestamp(timestamp, \"yyyy-MM-dd'T'HH:mm:ss.SSSSSSS\")")
+                to_timestamp("timestamp"),
+                to_timestamp("timestamp", "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
             ))
             .withColumn("temperature", expr("try_cast(temperature as double)"))
             .withColumn("humidity",expr("try_cast(humidity as double)"))
