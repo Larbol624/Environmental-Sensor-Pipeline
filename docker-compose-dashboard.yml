@@ -9,7 +9,12 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
   
 networks:
   env_network:
     external: true
+
+volumes:
+  grafana_data:
