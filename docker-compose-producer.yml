@@ -1,0 +1,14 @@
+services:
+  
+  producer_sensor:
+    build: 
+      context: .
+      dockerfile: docker/dockerfile.producer
+    networks:
+      - env_network
+    command: 
+      bash -c "python producer.py"
+
+networks:
+  env_network:
+    external: true
