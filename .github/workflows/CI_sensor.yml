@@ -1,0 +1,36 @@
+name: CI_Sensor
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  unittest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Create .env
+      run: |
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> configs/postgres/.env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> configs/postgres/.env
+        echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> configs/postgres/.env
+        echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> configs/postgres/.env
+        echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> configs/postgres/.env
+        echo "PGDATA=${{ secrets.PGDATA }}" >> configs/postgres/.env
+
+    - name: Create network
+      run: docker network create env_network
+  
+    - run: docker compose -f docker-compose-base.yml up --build -d
+    
+    - run: pip install -r requirements.text
+    
+    - run: python -m unittest discover -s tests/unittest
