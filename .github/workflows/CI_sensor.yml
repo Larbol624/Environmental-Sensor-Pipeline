@@ -26,6 +26,9 @@ jobs:
         echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> configs/postgres/.env
         echo "PGDATA=${{ secrets.PGDATA }}" >> configs/postgres/.env
 
+    - name: Create network
+      run: docker network create env_network
+  
     - run: docker compose -f docker-compose-base.yml up --build -d
     
     - run: pip install -r requirements.text
