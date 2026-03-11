@@ -26,6 +26,10 @@ jobs:
         echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> configs/postgres/.env
         echo "PGDATA=${{ secrets.PGDATA }}" >> configs/postgres/.env
 
+    - name: Show env file
+      run: |
+        cat configs/postgres/.env | sed 's/=.*$/=***/'
+    
     - name: Create network
       run: docker network create env_network
   
