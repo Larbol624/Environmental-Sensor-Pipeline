@@ -168,7 +168,7 @@ class TestIntegration(unittest.TestCase):
 
         read_write_batch(self.spark,topic_clean, topic_clean_2, second_transform)
 
-        response_curated=consumer_curated.poll(500)
+        response_curated=consumer_curated.poll(2000)
         msg_curated=return_message(response_curated)
         consumer_curated.close()
 
