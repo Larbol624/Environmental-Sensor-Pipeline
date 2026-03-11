@@ -17,6 +17,10 @@ jobs:
     - name: Create network
       run: docker network create env_network
   
-    - run: docker compose -f docker-compose-integration.yml up --build -d
+    - run: docker compose -f docker-compose-integration.yml up --build --abort-on-container-exit
+
+    - name: Stop containers
+      if: always() 
+      run: docker compose -f docker-compose-integration.yml down 
     
 

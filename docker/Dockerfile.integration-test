@@ -6,4 +6,3 @@ USER root
 
 RUN pip install pyspark==3.5.1 kafka-python
 
-CMD ["python3", "-m", "unittest", "test_integration.py"]

@@ -45,7 +45,7 @@ services:
       - ./tests/integration_tests/test_integration.py:/app/test_integration.py
       - ./tests/integration_tests/helpers.py:/app/helpers.py
     command:
-     bash -c "sleep 10"
+     bash -c "sleep 20 && python3 -m unittest -v test_integration.py"
     
 networks:
   env_network:
