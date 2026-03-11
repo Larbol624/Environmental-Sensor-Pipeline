@@ -5,6 +5,7 @@ from src.spark_consumers.second_transform import second_transform
 from src.spark_consumers.alerts import alert_check
 from pyspark.sql import SparkSession
 from helpers import read_writestream, read_write_batch
+import time
 
 class TestIntegration(unittest.TestCase):
 
@@ -168,7 +169,15 @@ class TestIntegration(unittest.TestCase):
 
         read_write_batch(self.spark,topic_clean, topic_clean_2, second_transform)
 
-        response_curated=consumer_curated.poll(2000)
+        
+        response_curated = None
+        for _ in range(20):
+            msg = consumer_curated.poll(1000)
+            if msg is not None:
+                response_curated = msg
+                break
+            time.sleep(1)
+
         msg_curated=return_message(response_curated)
         consumer_curated.close()
 
