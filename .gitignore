@@ -29,3 +29,6 @@ Thumbs.db
 # SPARK
 notebooks/checkpoints/
 artifacts/
+
+# CHECKPOINTS
+checkpoints/*
