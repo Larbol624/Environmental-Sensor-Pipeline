@@ -108,8 +108,7 @@ def read_write_batch(spark,input_topic,output_topic,transform_func,dlq_topic=Non
         .start()
     )
 
-    import time
-    time.sleep(5)
+    
 
-
+    query.awaitTermination(10)
     query.stop()
