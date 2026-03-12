@@ -1,0 +1,138 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_ESDP
+    restart: always
+    env_file:
+      - configs/postgres/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./configs/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - env_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ESDP
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    networks:
+      - env_network
+      
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper_ESDP
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - env_network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka_ESDP
+    restart: always
+    ports:
+      - "127.0.0.1:29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_ESDP:2181
+
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://127.0.0.1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+    volumes:
+      - ./configs/kafka:/etc/kafka-init
+    command: > 
+      bash -c " 
+        /etc/confluent/docker/run & 
+        sleep 10
+        bash /etc/kafka-init/create_topics.sh
+        wait
+      "
+    networks:
+      - env_network
+
+  spark-job-first-clean:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.kafka-spark
+    networks:
+      - env_network
+    command:
+      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/spark_job_first_clean.py"
+    depends_on:
+      - kafka
+
+  spark-job-alerts:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.kafka-spark-jdbc
+    networks:
+      - env_network
+    command:
+      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/spark_job_alert.py"
+    depends_on:
+      - kafka
+
+  spark-job-second-clean:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.kafka-spark-jdbc
+    networks:
+      - env_network
+    command:
+      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/spark_job_second_clean.py"
+    depends_on:
+      - kafka
+      
+  grafana:
+    image: grafana/grafana:9.5.15
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - env_network
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+
+
+  producer_sensor:
+    build: 
+      context: .
+      dockerfile: docker/dockerfile.producer
+    networks:
+      - env_network
+    command: 
+      bash -c "sleep 30 && python producer.py"
+    depends_on:
+      - kafka
+
+
+volumes:
+  postgres_data:
+  kafka_data:
+  zookeeper_data:
+  zookeeper_log:
+  grafana_data:
+
+networks:
+  env_network:
+    external: true

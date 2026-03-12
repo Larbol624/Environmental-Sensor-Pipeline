@@ -1,0 +1,235 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+      },
+      "description": "Gives the metrics of a single sensor",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "log": 2,
+              "type": "log"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \"timestamp\", AVG(humidity) AS \"humidity\", AVG(temperature) AS \"temperature\", AVG(co2) AS \"co2 level\" FROM aggregated_metrics WHERE sensor_id = $Sensor GROUP BY sensor_id, \"timestamp\" ORDER BY \"timestamp\" ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "\"timestamp\"",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "alias": "\"humidity\"",
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "humidity",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "alias": "\"temperature\"",
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "temperature",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "alias": "\"co2 level\"",
+                "name": "AVG",
+                "parameters": [
+                  {
+                    "name": "co2",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "name": "sensor_id",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              },
+              {
+                "property": {
+                  "name": "\"timestamp\"",
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": null,
+            "orderBy": {
+              "property": {
+                "name": [
+                  "\"timestamp\""
+                ],
+                "type": "string"
+              },
+              "type": "property"
+            }
+          },
+          "table": "aggregated_metrics"
+        }
+      ],
+      "title": "Average sensor",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "10",
+          "value": "10"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+        },
+        "definition": "SELECT DISTINCT sensor_id FROM public.aggregated_metrics;",
+        "description": "",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Sensor",
+        "options": [],
+        "query": "SELECT DISTINCT sensor_id FROM public.aggregated_metrics;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 3,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "2026-08-03T21:00:01.000Z",
+    "to": "2026-08-03T21:02:08.000Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Sensor dashboard",
+  "uid": "ec080d9e-7153-47c0-a721-208427f393bb",
+  "version": 2,
+  "weekStart": ""
+}

@@ -1,26 +1,3 @@
--- Table: public.Raw_readings
-
--- DROP TABLE IF EXISTS public."Raw_readings";
-
-CREATE TABLE IF NOT EXISTS public."Raw_readings"
-(
-    "Sensor_id" integer NOT NULL,
-    "TimeStamp" timestamp(0) without time zone NOT NULL,
-    "Temperature" numeric(4,1),
-    "Humidity" numeric(4,1),
-    "Co2" integer,
-    CONSTRAINT "Raw_readings_pkey" PRIMARY KEY ("Sensor_id", "TimeStamp")
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Raw_readings"
-    OWNER to "Larbol624";
-
-COMMENT ON TABLE public."Raw_readings"
-    IS 'This table saves the raw_readings from the sensor data';
-
-
 -- Table: public.Alerts
 
 -- DROP TABLE IF EXISTS public."Alerts";
@@ -41,32 +18,30 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.alerts
     OWNER to "Larbol624";
 
-COMMENT ON TABLE public.alerts
-    IS 'This table contains all information about an alert if the temperature, Co2 level or Humidity is at
-a critical level.
-';
 
+-- Table: public.aggregated_metrics
 
--- Table: public.Aggregated_metrics
+-- DROP TABLE IF EXISTS public.aggregated_metrics;
 
--- DROP TABLE IF EXISTS public."Aggregated_metrics";
-
-CREATE TABLE IF NOT EXISTS public."Aggregated_metrics"
+CREATE TABLE IF NOT EXISTS public.aggregated_metrics
 (
-    "Sensor_id" integer NOT NULL,
-    "Window_start" timestamp(0) without time zone NOT NULL,
-    "avg_Temp" numeric(4,1),
-    "avg_Humidity" numeric(4,1),
-    "avg_Co2" integer,
-    CONSTRAINT "Aggregated_metrics_pkey" PRIMARY KEY ("Sensor_id", "Window_start")
+    sensor_id integer,
+    "timestamp" timestamp without time zone,
+    temperature double precision,
+    humidity double precision,
+    co2 integer,
+    temp_delta double precision,
+    humid_delta double precision,
+    co2_delta integer,
+    temp_anomaly boolean,
+    humid_anomaly boolean,
+    co2_anomaly boolean,
+    anomaly boolean,
+    ingest_ts timestamp without time zone NOT NULL
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Aggregated_metrics"
+ALTER TABLE IF EXISTS public.aggregated_metrics
     OWNER to "Larbol624";
 
-COMMENT ON TABLE public."Aggregated_metrics"
-    IS 'This table contains info of the avg_temp, avg_humidity and Avg_Co2.
-The table has a timewindow of 1 min.
-So the window_start is the timestamp where the aggregating starts and then after 1 minute it ends.';
