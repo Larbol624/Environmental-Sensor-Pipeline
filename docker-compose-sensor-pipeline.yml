@@ -79,7 +79,7 @@ services:
   spark-job-alerts:
     build: 
       context: .
-      dockerfile: ./docker/dockerfile.kafka-spark-jdbc
+      dockerfile: ./docker/Dockerfile.kafka-spark-jdbc
     networks:
       - env_network
     command:
@@ -90,7 +90,7 @@ services:
   spark-job-second-clean:
     build: 
       context: .
-      dockerfile: ./docker/dockerfile.kafka-spark-jdbc
+      dockerfile: ./docker/Dockerfile.kafka-spark-jdbc
     networks:
       - env_network
     command:
