@@ -15,8 +15,8 @@ def first_transform(df):
             .withColumn("sensor_id", expr("try_cast(sensor_id as int)"))
             .withColumn("timestamp",
                 coalesce(
-                to_timestamp("timestamp"),
-                to_timestamp("timestamp", "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+                expr("try_to_timestamp(timestamp, 'yyyy-MM-dd''T''HH:mm:ss')"),
+                expr("try_to_timestamp(timestamp, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSS')")
             ))
             .withColumn("temperature", expr("try_cast(temperature as double)"))
             .withColumn("humidity",expr("try_cast(humidity as double)"))
