@@ -1,4 +1,4 @@
-FROM apache/spark:python3
+FROM apache/spark:3.5.1-python3
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY src ./src/spark_consumers
 
 COPY tests ./tests/test_spark
 
-RUN pip install --no-cache-dir pytest pyspark
+RUN pip install --no-cache-dir pytest pyspark==3.5.1
 
 ENV PYTHONPATH=/app
 
