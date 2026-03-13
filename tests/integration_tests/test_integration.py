@@ -67,7 +67,7 @@ class TestIntegration(unittest.TestCase):
         self.producer.send(topic_raw,
             {
             "sensor_id": 88, 
-            "timestamp": "2026-03-06T18:32:17.692773", 
+            "timestamp": '2026-03-06T18:32:17.692773', 
             "temperature": 18.58, 
             "humidity": 50.52, 
             "co2": 481
@@ -77,7 +77,7 @@ class TestIntegration(unittest.TestCase):
         self.producer.send(topic_raw,
             {
             "sensor_id": 'n',
-            "timestamp": '2026-01-30T21:00:00',
+            "timestamp": '2026-01-30T21:00:00.692773',
             "temperature": 21.0,
             "humidity": 50.0,
             "co2":500

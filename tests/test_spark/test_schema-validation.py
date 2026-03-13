@@ -137,7 +137,7 @@ def test_schema(spark):
     ranges_df=spark.createDataFrame([
         {
             "sensor_id":1,
-            "timestamp": '2026-01-30T21:00:00.00',
+            "timestamp": '2026-03-06T18:32:17.692773',
             "temperature": 25,
             "humidity": 40.0,
             "co2":1233
