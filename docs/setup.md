@@ -4,7 +4,7 @@
 - Docker compose
 - Git
 
-
+### Quickstart
 Step 1: Clone the Repo
 
 ```bash
@@ -17,20 +17,26 @@ Step 2: Create a external network
 ```bash
 docker network create env_network
 ```
+Step 3: Create a .env file
 
-Step 3: Build the docker compose
+    create a .env file in the folder configs/postgres
+    Copy the contents of example_postgres_env.txt into the .env file and 
+    choose your own postgres user and postgres password 
+
+
+Step 4: Build the docker compose
 
 ```bash
 docker compose -f docker-compose-sensor-pipeline.yml build
 ```
 
-Step 4: Start the container
+Step 5: Start the container
 
 ```bash
 docker compose -f docker-compose-sensor-pipeline.yml up -d
 ```
 
-Step 5: Open the dashboard
+Step 6: Open the dashboard
 
 Use your browser to visit http://localhost:3000
 
