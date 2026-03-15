@@ -1,5 +1,5 @@
 ## Architecture
-![Architecture diagram](architecture.png)
+![Architecture diagram](assets/architecture.png)
 
 
 This sensor pipeline uses the folowing services:
