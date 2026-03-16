@@ -2,9 +2,9 @@
 
 ### 1. Data Generation:
 
-    Sensor readings are created by a python script running in a docker container.
+Sensor readings are created by a python script running in a docker container.
     
-    An example of an sensor reading:
+An example of an sensor reading:
     
     {
         sensor_id   : 10,
@@ -16,14 +16,14 @@
 
 ### 2. Data ingestion:
 
-    Sensor readings are sent to the sensor_raw topic in Apache Kafka.
-    Each Sensor reading is sent seperatly by the docker container that generates the data.
+Sensor readings are sent to the sensor_raw topic in Apache Kafka.
+Each Sensor reading is sent seperatly by the docker container that generates the data.
 
 ### 3. Data stream processing
 
-    ![Diagram spark processing](assets/Flow_diagram_spark.png)
+![Diagram spark processing](assets/Flow_diagram_spark.png)
 
-    The streaming pipeline consist of the following transformations:
+The streaming pipeline consist of the following transformations:
 
 #### Data Cleaning:
 The data cleaning job:
