@@ -41,5 +41,5 @@ The data curating job:
 - writes the data to the postgreSQL database
     
 #### Alert generation:
-    Alerts are generated when value exceed certain thresholds.
+Alerts are generated when value exceed certain thresholds.
     
