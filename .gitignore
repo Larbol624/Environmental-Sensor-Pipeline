@@ -27,8 +27,10 @@ configs/env/*.env
 Thumbs.db
 
 # SPARK
-notebooks/checkpoints/
+notebooks/.ipynb_checkpoints/
 artifacts/
 
 # CHECKPOINTS
 checkpoints/*
+
+temp
