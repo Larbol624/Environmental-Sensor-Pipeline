@@ -19,7 +19,7 @@ Sensor producer:
 
 Apache Kafka:
 
-    Apache Kafka orchestrates all the processes in the pipeline.
+    Kafka acts as a distributed event streaming platform that decouples producers and consumers.
 
     Kafka makes sure:
         - all stages of data are seperated
@@ -41,9 +41,9 @@ Apache Spark:
               Kafka and PostgreSQL 
 
         * Data curation
-            - Missing values get filled and anomalies are detected in the data
+            - Missing values get forwardfilled and anomalies are detected in the data
 
-    Sparks runs in seperate containers so when 1 job fails the other containers continue running.  
+    Sparks runs in isolated containers managed by Docker, this ensure fault tolerance on infrastructure level.  
 
 PostgreSQL:
 
@@ -52,12 +52,10 @@ PostgreSQL:
 
 PGadmin:
 
-    PGadmin grafical user interface makes acces to PostgreSQL easier and faster.
-    Pgadmin is used to run analytical query and to debug database issues.
-
+    Provides a web-based interface for database inspection and query execution.
 
 Grafana:
 
-    Grafana make visualization of the data possible by using it's dashboard. 
+    Grafana makes visualization of the data possible by using its dashboard. 
     It connects to the the PostgreSQL database and displays the data in the dashboard.
     Since it is provisioned it takes minimal effort to make changes.
