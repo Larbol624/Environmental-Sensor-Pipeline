@@ -1,8 +1,8 @@
 import unittest
 from src.helpers.kafka import *
-from src.spark_consumers.first_transform import first_transform
-from src.spark_consumers.second_transform import second_transform
-from src.spark_consumers.alerts import alert_check
+from src.spark_consumers.transforms.first_transform import first_transform
+from src.spark_consumers.transforms.second_transform import second_transform
+from src.spark_consumers.transforms.alerts import alert_check
 from pyspark.sql import SparkSession
 from helpers import read_writestream, read_write_batch
 import time

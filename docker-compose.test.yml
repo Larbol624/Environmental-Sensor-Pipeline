@@ -5,7 +5,7 @@ services:
       dockerfile: ./docker/Dockerfile.test-spark
     volumes:
       - ./tests/test_spark:/app/tests
-      - ./src/spark_consumers:/app/src/spark_consumers
+      - ./src:/app/src
     working_dir: /app
     environment:
     - PYTHONPATH=/app

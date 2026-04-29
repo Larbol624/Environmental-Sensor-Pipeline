@@ -1,4 +1,4 @@
-from src.spark_consumers.first_transform import first_transform 
+from src.spark_consumers.transforms.first_transform import first_transform 
 
 def test_first_clean(spark):
 

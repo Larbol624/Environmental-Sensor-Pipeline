@@ -1,4 +1,4 @@
-from src.spark_consumers.alerts import alert_check
+from src.spark_consumers.transforms.alerts import alert_check
 from pyspark.sql.types import StructField, StructType, IntegerType,DoubleType
 def test_alert(spark):
 

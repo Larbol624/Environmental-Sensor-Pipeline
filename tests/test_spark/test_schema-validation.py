@@ -1,4 +1,4 @@
-from src.spark_consumers.first_transform import first_transform 
+from src.spark_consumers.transforms.first_transform import first_transform 
 from pyspark.sql.types import (
     StructType, StructField,
     IntegerType, DoubleType, TimestampType, StringType

@@ -1,4 +1,4 @@
-from src.spark_consumers.second_transform import second_transform
+from src.spark_consumers.transforms.second_transform import second_transform
 
 def test_second_clean(spark):
     Valid=spark.createDataFrame([{

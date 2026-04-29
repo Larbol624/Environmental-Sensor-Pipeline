@@ -4,7 +4,7 @@ WORKDIR /app
 
 USER root
 
-COPY src ./src/spark_consumers
+COPY src ./src/spark_consumers/transforms
 
 COPY tests ./tests/test_spark
 
