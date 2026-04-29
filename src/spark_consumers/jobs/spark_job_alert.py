@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType, IntegerType,TimestampType, DoubleType
-from src.spark_consumers.transforms.alerts import alert_check
+from spark_consumers.transforms.alerts import alert_check
 
 spark = (
     SparkSession.builder \

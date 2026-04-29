@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StringType
-from src.spark_consumers.transforms.first_transform import first_transform
+from spark_consumers.transforms.first_transform import first_transform
 
 spark = (
     SparkSession.builder \

@@ -61,7 +61,7 @@ services:
     networks:
       - env_network
     command:
-      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_first_clean.py"
+      bash -c "sleep 30 && PYTHONPATH=/app/src spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_first_clean.py"
     depends_on:
       - kafka
 
@@ -72,7 +72,7 @@ services:
     networks:
       - env_network
     command:
-      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_alert.py"
+      bash -c "sleep 30 && PYTHONPATH=/app/src spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_alert.py"
     depends_on:
       - kafka
 
@@ -83,7 +83,7 @@ services:
     networks:
       - env_network
     command:
-      bash -c "sleep 30 && spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_second_clean.py"
+      bash -c "sleep 30 && PYTHONPATH=/app/src spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 src/spark_consumers/jobs/spark_job_second_clean.py"
     depends_on:
       - kafka
       
