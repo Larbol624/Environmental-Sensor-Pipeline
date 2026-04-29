@@ -12,28 +12,26 @@ git clone https://github.com/Larbol624/Environmental-Sensor-Pipeline.git
 cd Environmental-Sensor-Pipeline
 ```
 
-Step 2: Create a external network
+Step 2: Create a .env file and network
 
+    create the network and a .env file in the folder configs/postgres by running
 ```bash
-docker network create env_network
+make setup
 ```
-Step 3: Create a .env file
-
-    create a .env file in the folder configs/postgres
-    Copy the contents of example_postgres_env.txt into the .env file and 
-    choose your own postgres user and postgres password 
-
+you can change the values to whatever you want but the default credentials are:
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
 
 Step 4: Build the docker compose
 
 ```bash
-docker compose -f docker-compose-sensor-pipeline.yml build
+make build
 ```
 
 Step 5: Start the container
 
 ```bash
-docker compose -f docker-compose-sensor-pipeline.yml up -d
+make run
 ```
 
 Step 6: Open the dashboard

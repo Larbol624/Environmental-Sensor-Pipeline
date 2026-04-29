@@ -23,8 +23,9 @@ A real-time data engineering pipeline that processes environmental sensor readin
 ```bash
 git clone https://github.com/Larbol624/Environmental-Sensor-Pipeline.git
 cd Environmental-Sensor-Pipeline
-docker network create env_network
-docker compose -f docker-compose-sensor-pipeline.yml up --build -d
+make setup
+make build
+make run
 ```
 
 ## Docs
