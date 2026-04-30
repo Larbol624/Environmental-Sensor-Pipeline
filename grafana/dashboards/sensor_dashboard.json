@@ -109,7 +109,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \"timestamp\", AVG(humidity) AS \"humidity\", AVG(temperature) AS \"temperature\", AVG(co2) AS \"co2 level\" FROM aggregated_metrics WHERE sensor_id = $Sensor GROUP BY sensor_id, \"timestamp\" ORDER BY \"timestamp\" ",
+          "rawSql": "SELECT \"timestamp\", AVG(humidity) AS \"humidity\", AVG(temperature) AS \"temperature\", AVG(co2) AS \"co2 level\" FROM aggregated_metrics WHERE sensor_id = $Sensor::integer GROUP BY sensor_id, \"timestamp\" ORDER BY \"timestamp\" ",
           "refId": "A",
           "sql": {
             "columns": [
@@ -172,7 +172,6 @@
                 "type": "groupBy"
               }
             ],
-            "limit": null,
             "orderBy": {
               "property": {
                 "name": [
@@ -190,30 +189,29 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": true,
-          "text": "10",
-          "value": "10"
-        },
+        "current": {},
         "datasource": {
           "type": "postgres",
           "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
         },
-        "definition": "SELECT DISTINCT sensor_id FROM public.aggregated_metrics;",
+        "definition": "SELECT DISTINCT sensor_id::text FROM public.aggregated_metrics;",
         "description": "",
         "hide": 0,
         "includeAll": false,
         "multi": false,
         "name": "Sensor",
         "options": [],
-        "query": "SELECT DISTINCT sensor_id FROM public.aggregated_metrics;",
+        "query": {
+          "query": "SELECT DISTINCT sensor_id::text FROM public.aggregated_metrics;",
+          "refId": "StandardVariableQuery"
+        },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -230,6 +228,6 @@
   "timezone": "",
   "title": "Sensor dashboard",
   "uid": "ec080d9e-7153-47c0-a721-208427f393bb",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }

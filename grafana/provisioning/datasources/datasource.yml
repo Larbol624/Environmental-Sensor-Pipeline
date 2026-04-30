@@ -4,6 +4,7 @@ datasources:
   - name: Postgres
     type: postgres
     access: proxy
+    uid: a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f
     url: postgres:5432
     database: ESDP_db
     user: Larbol624

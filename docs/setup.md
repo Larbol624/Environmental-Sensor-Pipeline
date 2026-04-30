@@ -44,3 +44,4 @@ password: admin
 
 
 Then you can open the dashboard sensor_dashboard.
+note: It might take take some time for the data to show. You can refresh by clicking the icon in the top right
