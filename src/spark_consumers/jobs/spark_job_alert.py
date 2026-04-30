@@ -60,8 +60,8 @@ def write_to_postgres(batch_df, batch_id):
         .format("jdbc")
         .option("url", "jdbc:postgresql://postgres:5432/ESDP_db")
         .option("dbtable", "alerts")
-        .option("user", "Larbol624")   ## NEED TO USE .env FILE
-        .option("password", "Test123")
+        .option("user", "your_user")   ## NEED TO USE .env FILE
+        .option("password", "your_password")
         .mode("append")
         .save()
     )

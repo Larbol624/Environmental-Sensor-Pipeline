@@ -7,9 +7,9 @@ datasources:
     uid: a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f
     url: postgres:5432
     database: ESDP_db
-    user: Larbol624
+    user: your_user
     secureJsonData:
-      password: Test123
+      password: your_password
     jsonData:
       sslmode: disable
       postgresVersion: 1500
