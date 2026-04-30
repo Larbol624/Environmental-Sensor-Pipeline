@@ -18,10 +18,244 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+      },
+      "description": "gives the current values of a sensor",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false
+      },
+      "pluginVersion": "9.5.15",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT temperature, humidity, co2 FROM aggregated_metrics \r\nWHERE sensor_id = $Sensor::integer\r\nORDER BY timestamp DESC\r\nLIMIT 1;  ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "temperature",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "humidity",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "co2",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "aggregated_metrics"
+        }
+      ],
+      "title": "Data Sensor",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.5.15",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "rawSql": "SELECT sensor_id, alert_reason, \"timestamp\" FROM alerts ORDER BY \"timestamp\" DESC LIMIT 50 ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "sensor_id",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "alert_reason",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "\"timestamp\"",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "orderBy": {
+              "property": {
+                "name": [
+                  "\"timestamp\""
+                ],
+                "type": "string"
+              },
+              "type": "property"
+            },
+            "orderByDirection": "DESC",
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8bab888a-0123-4456-b89a-b19de02a508d",
+                  "properties": {
+                    "value": [],
+                    "valueSrc": []
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "b88bab99-89ab-4cde-b012-319de025f260",
+              "type": "group"
+            }
+          },
+          "table": "alerts"
+        }
+      ],
+      "title": "Alerts",
+      "type": "table"
+    },
     {
       "datasource": {
         "type": "postgres",
@@ -82,10 +316,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 12,
+        "w": 24,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 1,
       "options": {
@@ -189,20 +423,25 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "1",
+          "value": "1"
+        },
         "datasource": {
           "type": "postgres",
           "uid": "a3cab3b0-2ed8-40c8-aca6-8c0df231cf8f"
         },
         "definition": "SELECT DISTINCT sensor_id::text FROM public.aggregated_metrics;",
         "description": "",
+        "error": {},
         "hide": 0,
         "includeAll": false,
         "multi": false,
@@ -225,7 +464,7 @@
     "to": "2026-08-03T21:02:08.000Z"
   },
   "timepicker": {},
-  "timezone": "",
+  "timezone": "browser",
   "title": "Sensor dashboard",
   "uid": "ec080d9e-7153-47c0-a721-208427f393bb",
   "version": 1,
